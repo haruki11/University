@@ -1,3 +1,8 @@
+/*
+大学の授業の自由制作で作っているブロック崩しゲームです。７月末完成予定です。
+*/
+
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
