@@ -1,3 +1,16 @@
+/*
+ このブロック崩しゲームでは、最初に５つの項目「ブロックの幅」、「ブロックの高さ」、「バーの長さ」、「バーのスピード」、「ボールのスピード」の数値を範囲内で入力します。
+ その後「Start」もしくは「Draw」のボタンを押します。「Start」ボタンを押すとゲームが始まり、「Draw」ボタンを押すと自分で描画するブロックを選択することができます。
+ゲームを始めてブロックを崩すと4種類のアイテムが出現します。
+一つ目は青の正方形のオブジェクトです。これを取るとバーに当たったときボールが止まり任意のタイミングでマウスをクリックしてボールを打ち出せます。
+二つ目は赤の正方形のオブジェクトです。これを取るとボールがブロックで反射しなくなり貫通するようになります。
+三つ目は緑の正方形のオブジェクトです。これを取るとボールが少し大きくなります。
+四つ目はピンクの正方形のオブジェクトです。これを取ると緑とは反対にボールが少し小さくなります。
+ブロックを全て崩すとゲームクリア。ボールが落ちてしまったらゲームオーバーとなります。
+
+ */
+
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
@@ -62,6 +75,7 @@ public class Block extends JFrame{
         Random rand = new Random();
 
         public MyJPanel(){
+            /*最初の画面 */
             setLayout(null);
             setBackground(Color.black);
             addMouseListener(this);
@@ -125,6 +139,7 @@ public class Block extends JFrame{
         }
 
         public void startApp(){
+            /*ゲームスタート */
             timer = new Timer(milliSecond, this);
             timer.start();
             
@@ -145,7 +160,7 @@ public class Block extends JFrame{
         }
 
         public void initBlock(){    
-            
+            /*ブロックの情報作成 */
             j = 0;
             i = 0;
             while(blockStartY + blockHeight < dimOfPanel.height * blockTotalRate){
@@ -167,6 +182,7 @@ public class Block extends JFrame{
         }
 
         public void gameOver(Graphics g){
+            /*ゲームオーバー */
             g.setColor(Color.red);
             Font f = new Font("Serif", Font.BOLD, 40);
             g.setFont(f);
@@ -174,6 +190,7 @@ public class Block extends JFrame{
         }
 
         public void gameClear(Graphics g){
+            /*ゲームクリア */
             g.setColor(Color.blue);
             Font f = new Font("Serif", Font.BOLD, 40);
             g.setFont(f);
@@ -187,14 +204,18 @@ public class Block extends JFrame{
             super.paintComponent(g);
 
             if(part == 2){
+
+                /*ゲームオーバーの判定 */
                 if(status == -1){
                     gameOver(g);
                 }
     
+                /*ゲームクリアの判定 */
                 if(blockNum == blockBroken || drewBlockNum == blockBroken){
                     gameClear(g);
                 }
-    
+
+                /*アイテム取得 */
                 if(blueBall){
                     drawBlueBall(g);
                 }
@@ -215,16 +236,18 @@ public class Block extends JFrame{
                 drawMyStick(g);
                 drawBall(g);
             } else if (part == 1){
+                /*描画モードへ移行 */
                 initBlock();
                 drawRec(g);
                 part = 3;
             } else if(part == 3){
+                /*描画モード */
                 drawRec(g);
             }
         }
 
         public void drawMyStick(Graphics g){
-            
+            /*バーを描画 */
             if (myX + myWidth / 4 < mouseX && mouseX < myX+myWidth / 4 * 3){
 
             } else if(0 < myX && mouseX < myX + myWidth / 2){
@@ -237,6 +260,7 @@ public class Block extends JFrame{
         }
 
         public void drawBlock(Graphics g){
+            /*ブロックを描画 */
             int colorIndex = 0;
             int temp = -1;
 
@@ -257,6 +281,8 @@ public class Block extends JFrame{
         }
 
         public void drawBall(Graphics g){
+            
+
             //ボールとバーの接触
             if(!ballStop){
                 if(ballY+ballHeight >= myY-myHeight-ballSpeed && ballY+ballHeight <= myY-myHeight && myX < ballX + ballWidth / 2 && ballX + ballWidth / 2 < myX + myWidth && blueBallStop == false){
@@ -355,6 +381,7 @@ public class Block extends JFrame{
                     }
                 }
 
+                /*青のアイテムを取っているか */
                 if(blueBallStop){
                     ballX = myX+blueBallStayPosition;
                 } else {
@@ -370,6 +397,7 @@ public class Block extends JFrame{
         }
 
         public void drawBlueBall(Graphics g){
+            /*青いアイテムの描画 */
             blueBallY += blueBallSpeed;
             if(blueBallY+colorBallDiameter >= myY-myHeight-blueBallSpeed && blueBallY+colorBallDiameter <= myY-myHeight && myX < blueBallX + colorBallDiameter / 2 && blueBallX + colorBallDiameter / 2 < myX + myWidth){
                 blueBall = false;
@@ -384,6 +412,7 @@ public class Block extends JFrame{
         }
 
         public void drawRedBall(Graphics g){
+            /*赤いアイテムの描画 */
             redBallY += redBallSpeed;
             if(redBallY+colorBallDiameter >= myY-myHeight-redBallSpeed && redBallY+colorBallDiameter <= myY-myHeight && myX < redBallX + colorBallDiameter / 2 && redBallX + colorBallDiameter / 2 < myX + myWidth){
                 redBall = false;
@@ -399,6 +428,7 @@ public class Block extends JFrame{
         }
 
         public void drawPinkBall(Graphics g){
+            /*ピンクのアイテムの描画 */
             pinkBallY += pinkBallSpeed;
             if(pinkBallY+colorBallDiameter >= myY-myHeight-pinkBallSpeed && pinkBallY+colorBallDiameter <= myY-myHeight && myX < pinkBallX + colorBallDiameter / 2 && pinkBallX + colorBallDiameter / 2 < myX + myWidth){
                 pinkBall = false;
@@ -416,6 +446,7 @@ public class Block extends JFrame{
         }
 
         public void drawGreenBall(Graphics g){
+            /*緑のアイテムの描画 */
             greenBallY += greenBallSpeed;
             if(greenBallY+colorBallDiameter >= myY-myHeight-greenBallSpeed && greenBallY+colorBallDiameter <= myY-myHeight && myX < greenBallX + colorBallDiameter / 2 && greenBallX + colorBallDiameter / 2 < myX + myWidth){
                 greenBall = false;
@@ -433,6 +464,7 @@ public class Block extends JFrame{
         }
 
         public void drawRec(Graphics g){
+            /*描画モードの時、ブロックを描画 */
             for(int i=0; i<blockNum; i++){
                 g.setColor(Color.red);
                 if(blockClicked[i]){
@@ -444,7 +476,9 @@ public class Block extends JFrame{
         }
 
         public void actionPerformed(ActionEvent e){
+            /*ボタンの検知 */
             if(e.getSource() == button || e.getSource() == drawButton){
+                /*入力された数値を変数に格納 */
                 String temp = textBlockWidth.getText();
                 int num = Integer.valueOf(temp);
                 if(num < 20){
@@ -517,6 +551,7 @@ public class Block extends JFrame{
                 }
                 startApp();
             } else if(e.getSource() == drawButton){
+                /*描画モード */
                 startButton = new JButton("Start");
                 startButton.setBounds(300, 300, 100, 30);
                 startButton.addActionListener(this);
@@ -524,6 +559,7 @@ public class Block extends JFrame{
                 add(startButton);
                 part = 1;
             } else if(e.getSource() == startButton){
+                /*描画モードからゲームをスタート */
                 boolean f = false;
                 int num = 0;
                 for(int i=0; i<blockNum; i++){
@@ -547,6 +583,7 @@ public class Block extends JFrame{
         }
 
         public void mousePressed(MouseEvent e){
+            /*マウスが押されたとき */
             if(part == 3){
                 mouseX = e.getX();
                 mouseY = e.getY();
@@ -581,6 +618,7 @@ public class Block extends JFrame{
         }
 
         public void mouseMoved(MouseEvent e){
+            /*マウスが動いたとき */
             mouseX = e.getX();
         }
 
